@@ -1,0 +1,54 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+Interface CrudRepository<T, ID>{
+    Iterator<T> findAll(QueryCondition queryCondition)
+    T findById(ID id)
+    T save(SaveAndUpdateCondition condition)
+    T update(SaveAndUpdateCondition condition)
+    long count(QueryCondition queryCondition)
+    ... Other()
+}
+
+Interface SimpleMybatisRepository implements CrudRepository {
+
+}
+
+class OtherImplementationAdapter implements CrudRepository {}
+
+class MysqlXmlMyBatisMapper implements SimpleMybatisRepository {}
+class KingBaseXmlMyBatisMapper implements SimpleMybatisRepository {}
+class otherJdbcXmlMyBatisMapper implements SimpleMybatisRepository {}
+
+Interface CustomBusinessRepository{
+    void complexMethod1()
+    void complexMethod2()
+    void complexMethod3()
+    ... other()
+}
+
+class CustomBusinessRepositoryImpl implements CustomBusinessRepository {
+
+}
+
+Interface BusinessRepository implements CrudRepository, CustomBusinessRepository{
+}
+
+
+
+
+Class QueryCondition{
+    List<String> fields
+    String schema
+    String table
+    Object filters
+}
+
+
+class SaveAndUpdateCondition{
+    Map<String, Object> updateFields
+    String table
+    String schema
+}
+
+@enduml

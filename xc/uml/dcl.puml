@@ -1,0 +1,63 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+Interface DclRepository {
+    void createUser(String username, String password);
+    void alterUser(String username, String password);
+    void dropUser(String username);
+
+    void grant(DbPrivilege privilege);
+    List<String> showGrants(String user);
+    void revoke(dbPrivilege privilege);
+}
+
+abstract class JdbcDclRepository implements DclRepository {
+    public JdbcDclRepository(){}
+}
+
+class MysqlDclRepository extends JdbcDclRepository {}
+class KingBaseDclRepository extends JdbcDclRepository {}
+class PostgresDclRepository extends JdbcDclRepository {}
+class ClickHouseDclRepository extends   JdbcDclRepository{}
+class OtherAdapterDclRepository implements DclRepository {}
+
+class DbUser {
+    DclOpType opType
+    String user
+    String password
+}
+
+class DbPrivilege{
+    String host
+    private List<String> privileges
+    String db
+    String user
+    String password
+}
+
+enum DclOpType {
+    CREATE
+    ALTER
+    DELETE
+    GRANT
+    SHOW
+    REVOKE
+}
+
+enum Privilege {
+  ALTER
+  CREATE
+  DELETE
+  DROP
+  INDEX
+  INSERT
+  SELECT
+  UPDATE
+  FILE
+  PROCESS
+  RELOAD
+  SHUTDOWN
+  ALL
+  USAGE
+}
+@enduml

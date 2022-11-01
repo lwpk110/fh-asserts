@@ -1,0 +1,79 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+Interface DdlRepository extends DatabaseDdlRepository, TableDdlRepository{
+}
+
+
+
+Interface DatabaseDdlRepository {
+    create(DatabaseMetadata metadata)
+    drop(String dbName)
+}
+abstract class JdbcDatabaseDdlRepository implements DatabaseDdlRepository {
+}
+
+class MysqlJdbcDatabaseDdlRepository extends JdbcDatabaseDdlRepository {}
+class KingBaseJdbcDatabaseDdlRepository extends JdbcDatabaseDdlRepository {}
+class PostgresJdbcDatabaseDdlRepository extends JdbcDatabaseDdlRepository {}
+class MongodbDatabaseDdlRepository implements DatabaseDdlRepository {}
+
+
+Interface TableDdlRepository {
+    addTable(TableDdlMetadata tbMetadata)
+    dropTable(String tbName)
+    renameTable(String old, String new)
+
+    showKeys(String tbName)
+    showIndexes(String tbName)
+    add key(IndexDefinition index)
+    drop key(String tbName, String indexName)
+
+    addColumn(ColumnDefinition field);
+    modifyColumn(ColumnDefinition newColumn);
+    drop column(String tbName, String columnName);
+}
+
+abstract class JdbcTableDdlRepository implements TableDdlRepository {
+}
+
+class MysqlJdbcTableDdlRepository extends JdbcTableDdlRepository {}
+class KingBaseJdbcTableDdlRepository extends JdbcTableDdlRepository {}
+class PostgresJdbcTableDdlRepository extends JdbcTableDdlRepository {}
+class MongodbTableDdlRepository implements TableDdlRepository {}
+
+class DatabaseMetadata {
+    String dbName
+    Map<String, Object> properties
+}
+
+class TableDdlMetadata {
+    String tbName
+    boolean check
+    Set<ColumnDefinition> fields
+    Set<ForeignKeyDefinition> foreignKeys
+}
+
+class ColumnDefinition{
+    String columnName
+    String TypeDefinition
+    boolean nullable
+    boolean uniqueAble
+    boolean primaryKey
+    String checkExpression
+    Object defaultValue
+}
+
+class ForeignKeyDefinition{
+    String name
+    String key
+    string referenceTb
+    string referenceColumn
+}
+
+class IndexDefinition{
+    String tbName
+    String indexName
+    String indexType
+}
+@enduml
