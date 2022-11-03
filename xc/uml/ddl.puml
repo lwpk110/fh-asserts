@@ -4,12 +4,11 @@
 Interface DdlRepository extends DatabaseDdlRepository, TableDdlRepository{
 }
 
-
-
 Interface DatabaseDdlRepository {
     create(DatabaseMetadata metadata)
     drop(String dbName)
 }
+
 abstract class JdbcDatabaseDdlRepository implements DatabaseDdlRepository {
 }
 
@@ -18,7 +17,6 @@ class KingBaseJdbcDatabaseDdlRepository extends JdbcDatabaseDdlRepository {}
 class PostgresJdbcDatabaseDdlRepository extends JdbcDatabaseDdlRepository {}
 class MongodbDatabaseDdlRepository implements DatabaseDdlRepository {}
 
-
 Interface TableDdlRepository {
     addTable(TableDdlMetadata tbMetadata)
     dropTable(String tbName)
@@ -26,8 +24,9 @@ Interface TableDdlRepository {
 
     showKeys(String tbName)
     showIndexes(String tbName)
-    add key(IndexDefinition index)
-    drop key(String tbName, String indexName)
+    addKey(IndexDefinition index)
+    addIndex(String tbName, String indexName)
+    dropIndex(String tbName, String indexName)
 
     addColumn(ColumnDefinition field);
     modifyColumn(ColumnDefinition newColumn);
@@ -44,6 +43,7 @@ class MongodbTableDdlRepository implements TableDdlRepository {}
 
 class DatabaseMetadata {
     String dbName
+    String charset
     Map<String, Object> properties
 }
 
@@ -52,6 +52,7 @@ class TableDdlMetadata {
     boolean check
     Set<ColumnDefinition> fields
     Set<ForeignKeyDefinition> foreignKeys
+    Set<IndexDefinition> indexes
 }
 
 class ColumnDefinition{
@@ -62,6 +63,7 @@ class ColumnDefinition{
     boolean primaryKey
     String checkExpression
     Object defaultValue
+    String comment
 }
 
 class ForeignKeyDefinition{
